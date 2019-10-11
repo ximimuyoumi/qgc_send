@@ -1,0 +1,18 @@
+<launch>
+	<arg name="fcu_url" value="udp://:14540@"/>
+	<arg name="gcs_url" value="udp://:14556@127.0.0.1:14551"/>
+       <node name="obstacle_send" pkg="qgc_send" type="obstacle_send" respawn="true" output="log"/>
+
+       <node
+        name="gcs_bridge" pkg="mavros" type="gcs_bridge" 
+	args="_gcs_url:=udp://@127.0.0.1:14560"
+       />
+
+       <include file="$(find mavros)/launch/px4.launch">
+		<arg name="fcu_url" value="$(arg fcu_url)"/>
+		<arg name="gcs_url" value="$(arg gcs_url)"/>
+       </include>
+       <node name="read_serial" pkg="listen_serial" type="listen_serial" respawn="true"/>
+
+
+</launch>
